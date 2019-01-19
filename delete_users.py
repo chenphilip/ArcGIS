@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-  Script to read account list from the portal.
+  Delete users based on the search result.
 """
 
 import csv
