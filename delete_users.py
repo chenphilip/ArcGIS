@@ -20,9 +20,9 @@ def search_contents(content_manager, user_name):
 	try:
 		content_query = "owner:{}".format(user_name)
 		user_contents = our_AGO.content.search(	query=content_query,
-												max_items=500,
-												sort_field="modified",
-												sort_order="asc")
+							max_items=500,
+							sort_field="modified",
+							sort_order="asc")
 		return user_contents
 	except Exception as ex:
 		# Just print(ex) is cleaner and more likely what you want
@@ -173,8 +173,8 @@ try:
 
 	print("Connecting... ")
 	our_AGO = arcgis.gis.GIS(	our_org_constants.OUR_AGO_URL,
-								args.user,
-								args.password)
+					args.user,
+					args.password)
 
 	verbose = args.verbose
 	commit = args.commit
@@ -204,8 +204,8 @@ try:
 
 	for acct in accounts:
 		csv_writer.writerow( {  'First Name': acct.firstName,
-                                'Last Name': acct.lastName,
-                                'Username': acct.username } )
+                          	      	'Last Name': acct.lastName,
+                                	'Username': acct.username } )
 
 		if commit:
 			print("\n* Deleting user {} and assets ... ".format(acct.username) )
