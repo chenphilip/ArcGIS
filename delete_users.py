@@ -20,9 +20,9 @@ def search_contents(content_manager, user_name, max_results):
 	try:
 		content_query = "owner:{}".format(user_name)
 		user_contents = content_manager.search(	query=content_query,
-												max_items=max_results,
-												sort_field="modified",
-												sort_order="desc")
+							max_items=max_results,
+							sort_field="modified",
+							sort_order="desc")
 		return user_contents
 	except Exception as ex:
 		print(ex)
@@ -100,11 +100,11 @@ def delete_account_and_assets( portal_user, content_manager, available_licenses,
 				for user_item in user_items:
 					try:
 						AGO_RELATIONSHIPS = [	'Map2Service',
-												'WMA2Code',
-												'Map2FeatureCollection',
-												'MobileApp2Code',
-												'Service2Data',
-												'Service2Service']
+									'WMA2Code',
+									'Map2FeatureCollection',
+									'MobileApp2Code',
+									'Service2Data',
+									'Service2Service']
 						for relationship in AGO_RELATIONSHIPS:
 
 							related_items = user_item.related_items(relationship, direction='forward')
@@ -194,8 +194,8 @@ try:
 
 	print("Connecting... ")
 	our_AGO = arcgis.gis.GIS(	our_org_constants.OUR_AGO_URL,
-								args.user,
-								args.password)
+					args.user,
+					args.password)
 
 	# Look up licenses
 	our_licenses = our_AGO.admin.license.all()
@@ -219,9 +219,9 @@ try:
 		print("NO account found")
 
 	for acct in accounts:
-		csv_writer.writerow( {  'First Name': acct.firstName,
-                                'Last Name': acct.lastName,
-                                'Username': acct.username } )
+		csv_writer.writerow( {	'First Name': acct.firstName,
+            		                'Last Name': acct.lastName,
+                               		'Username': acct.username } )
 
 		if args.commit:
 			print("\n* Deleting user {} and assets ... ".format(acct.username) )
