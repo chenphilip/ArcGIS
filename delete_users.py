@@ -93,7 +93,7 @@ def delete_account_and_assets( portal_user, content_manager, available_licenses,
 
 		# delete user's items
 		while True:
-			user_items = search_contents(content_manager, portal_user_name, 1)
+			user_items = search_contents(content_manager, portal_user_name, 10)
 			# items are returned as a list.
 			number_of_items = len(user_items)
 			if number_of_items > 0:
