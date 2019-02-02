@@ -178,7 +178,7 @@ def delete_account_and_assets( portal_user, content_manager, available_licenses,
 parser = argparse.ArgumentParser()
 parser.add_argument("-u","--user", default="myID", help="Administrator username")
 parser.add_argument("-p","--password", default="myPassword", help="Administrator password")
-parser.add_argument("-t","--termcode", default="2017PT_ycao50", help="Termcode 201910 etc")
+parser.add_argument("-t","--termcode", default="201900", help="Termcode 201910 etc")
 parser.add_argument("-f", "--file", default="users_list.csv", help="CSV file path and filename")
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
 parser.add_argument("-c", "--commit", action="store_true", help="Delete users for real")
