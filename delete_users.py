@@ -22,9 +22,9 @@ def search_contents( content_manager, user_name, max_results ):
 	try:
 		content_query = "owner:{}".format(user_name)
 		user_contents = content_manager.search(	query=content_query,
-												max_items=max_results,
-												sort_field="modified",
-												sort_order="desc")
+							max_items=max_results,
+							sort_field="modified",
+							sort_order="desc")
 		return user_contents
 	except Exception as ex:
 		print(ex)
@@ -85,11 +85,11 @@ def display_account_info( portal_user, content_manager, verbose ):
 def delete_item_relationships( target_item, verbose ):
 	try:
 		AGO_RELATIONSHIPS = [	'Map2Service',
-								'WMA2Code',
-								'Map2FeatureCollection',
-								'MobileApp2Code',
-								'Service2Data',
-								'Service2Service']
+					'WMA2Code',
+					'Map2FeatureCollection',
+					'MobileApp2Code',
+					'Service2Data',
+					'Service2Service']
 		
 		for relationship in AGO_RELATIONSHIPS:
 			
@@ -232,8 +232,8 @@ try:
 
 	print("Connecting... ")
 	our_AGO = arcgis.gis.GIS(	our_org_constants.OUR_AGO_URL,
-								admin_id,
-								admin_pw)
+					admin_id,
+					admin_pw)
 
 	# Look up licenses
 	our_licenses = our_AGO.admin.license.all()
@@ -262,18 +262,18 @@ try:
 		if args.commit:
 			print("\n* Deleting user {} and assets ... ".format(acct.username) )
 			outcome = delete_account_and_assets(	acct,
-													org_content_manager,
-													our_licenses,
-													args.verbose)
+								org_content_manager,
+								our_licenses,
+								args.verbose)
 			if outcome:
 				log_file.write("Deleted user {}'s accounts {} .\n".format(acct.firstName, acct.username) )
 			else:
 				log_file.write("FAILED to delete user {}'s accounts {} .\n".format(acct.firstName, acct.username) )
 		else:
 			# it's a dry-run
-			csv_writer.writerow( {  'First Name': acct.firstName,
-            	                    'Last Name': acct.lastName,
-                	                'Username': acct.username } )
+			csv_writer.writerow( {	'First Name': acct.firstName,
+   		         	                'Last Name': acct.lastName,
+                	              		'Username': acct.username } )
 			display_account_info(acct, org_content_manager, args.verbose)
 
 	if not args.commit:
