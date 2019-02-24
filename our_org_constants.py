@@ -12,17 +12,17 @@ __status__ = "Tested on Python 3.6, ArcGIS API 1.5.2"
 
 OUR_AGO_URL = "https://bcitgis.maps.arcgis.com/"
 
-OUR_ARC_PRO_ENTITLEMENTS = ['3DAnalystN',
-							'airportsN',
-							'dataInteropN',
-							'dataReviewerN',
-							'defenseN',
-							'desktopAdvN',
-							'geostatAnalystN',
-							'imageAnalystN',
-							'maritimeN',
-							'networkAnalystN',
-							'productionMapN',
-							'publisherN',
-							'spatialAnalystN',
-							'workflowMgrN']
+OUR_ARC_PRO_ENTITLEMENTS = [	'3DAnalystN',
+				'airportsN',
+				'dataInteropN',
+				'dataReviewerN',
+				'defenseN',
+				'desktopAdvN',
+				'geostatAnalystN',
+				'imageAnalystN',
+				'maritimeN',
+				'networkAnalystN',
+				'productionMapN',
+				'publisherN',
+				'spatialAnalystN',
+				'workflowMgrN']
