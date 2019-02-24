@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-  Script to read account list from a csv file and create appropriate users in the portal.
+  Script to read email list from a csv file and send out invite emails to users.
 """
 __author__ = "Philip Chen"
 __license__ = "https://opensource.org/licenses/GPL-3.0 GPL-3.0 License"
-__date__ = "2019.02.24"
+__date__ = "2019.02.23"
 __version__ = "1.0.0"
 __status__ = "Tested on Python 3.7, ArcGIS API 1.5.2"
 
@@ -21,9 +21,7 @@ from our_org_constants import *
 parser = argparse.ArgumentParser()
 parser.add_argument("-u", "--user", help="Administrator username")
 parser.add_argument("-p", "--password", help="Administrator password")
-parser.add_argument("-t", "--termcode", default="201900", help="Termcode 201910 etc")
 parser.add_argument("-r", "--role", default="Publisher_LocalOnly", help="Role will be assigned to the users")
-parser.add_argument("-f", "--file", default="new_users.csv", help="Input CSV file path and filename")
 
 args = parser.parse_args()
 
@@ -39,7 +37,7 @@ while not admin_pw:
 
 # Read the log file in append mode
 timestamp = datetime.datetime.now()
-log_filename = "ago_new_account_{}.log".format(timestamp.strftime("%Y%m%d"))
+log_filename = "ago_invite_emails_{}.log".format(timestamp.strftime("%Y%m%d"))
 log_file = open(log_filename, 'a')
 
 log_file.write("\n=============== {} ================\n".format(timestamp.strftime("%A %H:%M")) )
@@ -54,45 +52,37 @@ try:
 			print(role.role_id, role.name, role.description)
 			acct_role = role
 
-	arc_pro_license = our_AGO.admin.license.get('ArcGIS Pro')
 
 	# loop through and create users
 	number_of_acct = 0
-	with open(args.file, 'r') as user_list_csv:
+	with open("invitees.csv", 'r') as user_list_csv:
 		users = csv.DictReader(user_list_csv)
 		for user in users:
 			first_name = user['First Name']
 			last_name = user['Last Name']
-			bann_id = user['Id ']
+			user_name = user['Username']
 			email_addr = user['myBcit Email']
-			print (first_name, last_name, bann_id, email_addr)
+			print(first_name, last_name, user_name, email_addr)
 
 			email_str_length = len(email_addr)
 			if email_str_length > 12:
-				email_name = email_addr.split('@')[0]
-				user_name = (args.termcode + "_" + email_name).lower()
-				acct_description = "Auto-created for " + args.termcode
-
-				temp_password = pwgen()
-				print(temp_password)
-				log_file.write("\nCreating user: {}".format(user_name))
+				log_file.write("\nEmail user: {}".format(user_name))
 				try:
 	                # Syntax and default values:
-    	            #   create(username, password, firstname, lastname, email, description=None,
-        	        #           role='org_user', provider='arcgis', idp_username=None, level=2,
-            	    #           thumbnail=None, user_type='creator', credits=-1, groups=None)
-					result = our_AGO.users.create(	username=user_name,
-													password=temp_password,
-													firstname=first_name,
-													lastname=last_name,
-													email=email_addr,
-													description=acct_description,
-													role=acct_role)
-					if result:
+    	            #   invite(email, role='org_user', level=2, provider=None,
+                    #   must_approve=False, expiration='1 Day', validate_email=True)
+					outcome = our_AGO.users.invite(	email=email_addr,
+													role=acct_role,
+                                                    level=2,
+                                                    expiration='1 Week',
+                                                    validate_email=True)
+					if outcome:
 						number_of_acct += 1
-						log_file.write(" *created successfully*\n")
+						log_file.write(" email to {} sent successfully\n".format(email_addr))
 						arc_pro_license.assign(username=user_name, entitlements=OUR_ARC_PRO_ENTITLEMENTS)
 						arcgis.gis.User(our_AGO, user_name).esri_access = True
+                    else:
+                        log_file.write(" *Failed to email {} *\n".format(email_addr))
 				except Exception as add_ex:
 					print(add_ex)
 					print("\nAn exception occured during creating user: " + user_name)
