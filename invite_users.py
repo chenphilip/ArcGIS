@@ -68,19 +68,16 @@ try:
 			if email_str_length > 12:
 				log_file.write("\nEmail user: {}".format(user_name))
 				try:
-	                # Syntax and default values:
-    	            #   invite(email, role='org_user', level=2, provider=None,
-                    #   must_approve=False, expiration='1 Day', validate_email=True)
 					outcome = our_AGO.users.invite(	email=email_addr,
-													role=acct_role,
-                                                    level=2,
-                                                    expiration='1 Week',
-                                                    validate_email=True)
+									role=acct_role,
+									level=2,
+									expiration='1 Week',
+									validate_email=True)
 					if outcome:
 						number_of_acct += 1
 						log_file.write(" email to {} sent successfully\n".format(email_addr))
-						arc_pro_license.assign(username=user_name, entitlements=OUR_ARC_PRO_ENTITLEMENTS)
-						arcgis.gis.User(our_AGO, user_name).esri_access = True
+						# arc_pro_license.assign(username=user_name, entitlements=OUR_ARC_PRO_ENTITLEMENTS)
+						# arcgis.gis.User(our_AGO, user_name).esri_access = True
                     else:
                         log_file.write(" *Failed to email {} *\n".format(email_addr))
 				except Exception as add_ex:

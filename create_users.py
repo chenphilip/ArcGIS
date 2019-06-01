@@ -77,17 +77,13 @@ try:
 				print(temp_password)
 				log_file.write("\nCreating user: {}".format(user_name))
 				try:
-	                # Syntax and default values:
-    	            #   create(username, password, firstname, lastname, email, description=None,
-        	        #           role='org_user', provider='arcgis', idp_username=None, level=2,
-            	    #           thumbnail=None, user_type='creator', credits=-1, groups=None)
 					result = our_AGO.users.create(	username=user_name,
-													password=temp_password,
-													firstname=first_name,
-													lastname=last_name,
-													email=email_addr,
-													description=acct_description,
-													role=acct_role)
+									password=temp_password,
+									firstname=first_name,
+									lastname=last_name,
+									email=email_addr,
+									description=acct_description,
+									role=acct_role)
 					if result:
 						number_of_acct += 1
 						log_file.write(" *created successfully*\n")
