@@ -14,8 +14,8 @@ from our_org_constants import *
 
 __author__ = "Philip Chen"
 __license__ = "https://opensource.org/licenses/GPL-3.0 GPL-3.0 License"
-__date__ = "2019.06.01"
-__version__ = "1.2.7"
+__date__ = "2019.06.29"
+__version__ = "1.2.8"
 __status__ = "Tested on Python 3.7, ArcGIS API 1.5.2"
 
 
@@ -29,6 +29,7 @@ def search_contents(content_manager, user_name, max_results):
         return user_contents
     except Exception as ex:
         print(ex)
+
 
 # end of function search_contents()
 
@@ -80,6 +81,7 @@ def display_account_info(portal_user, content_manager, verbose):
         print("[Role] ", portal_user.role)
         print("[Description] ", portal_user.description)
 
+
 # end of function display_account_info()
 
 def delete_item_relationships(target_item, verbose):
@@ -111,6 +113,7 @@ def delete_item_relationships(target_item, verbose):
 
     except Exception as ex:
         print(ex)
+
 
 # end of function delete_item_relationships()
 
@@ -193,6 +196,7 @@ def delete_account_and_assets(portal_user, content_manager, available_licenses, 
     except Exception as ex:
         print(ex)
 
+
 # end of function delete_account_and_assets()
 
 parser = argparse.ArgumentParser()
@@ -225,61 +229,61 @@ try:
 
     candidates_file_name = "ago_delete_candidates.csv"
     # Read the csv file in write mode
-    candidate_list_csv = open(candidates_file_name, 'w', newline="")
-    field_names = ('First Name', 'Last Name', 'Username')
-    csv_writer = csv.DictWriter(candidate_list_csv, fieldnames=field_names)
-    csv_writer.writeheader()
+    with open(candidates_file_name, 'w', newline="") as candidate_list_csv:
+        field_names = ('First Name', 'Last Name', 'Username')
+        csv_writer = csv.DictWriter(candidate_list_csv, fieldnames=field_names)
+        csv_writer.writeheader()
 
-    print("Connecting... ")
-    our_AGO = arcgis.gis.GIS(OUR_AGO_URL, admin_id, admin_pw)
+        print("Connecting... ")
+        our_AGO = arcgis.gis.GIS(OUR_AGO_URL, admin_id, admin_pw)
 
-    # Look up licenses
-    our_licenses = our_AGO.admin.license.all()
+        # Look up licenses
+        our_licenses = our_AGO.admin.license.all()
 
-    # Look up users
-    # accounts = our_AGO.users.search(query="philip")
+        # Look up users
+        # accounts = our_AGO.users.search(query="philip")
 
-    # If necessary apply post search filter
-    search_results = our_AGO.users.search(max_users=200)
-    accounts = []
-    for acct in search_results:
-        if acct.username.startswith(args.termcode):
-            accounts.append(acct)
+        # If necessary apply post search filter
+        search_results = our_AGO.users.search(max_users=200)
+        accounts = []
+        for acct in search_results:
+            if acct.username.startswith(args.termcode):
+                accounts.append(acct)
 
-    number_of_accounts = len(accounts)
-    if number_of_accounts > 0:
-        print("Total ", str(number_of_accounts), " account(s) found")
-        # org_content_manager = arcgis.gis.ContentManager(our_AGO)
-        org_content_manager = our_AGO.content
-    else:
-        print("NO account found")
-
-    for acct in accounts:
-
-        if args.commit:
-            print("\n* Deleting user {} and assets ... ".format(acct.username))
-            outcome = delete_account_and_assets(acct,
-                                                org_content_manager,
-                                                our_licenses,
-                                                args.verbose)
-            if outcome:
-                log_file.write("Deleted user {}'s accounts {} .\n".format(acct.firstName, acct.username))
-            else:
-                log_file.write("FAILED to delete user {}'s accounts {} .\n".format(acct.firstName, acct.username))
+        number_of_accounts = len(accounts)
+        if number_of_accounts > 0:
+            print("Total ", str(number_of_accounts), " account(s) found")
+            # org_content_manager = arcgis.gis.ContentManager(our_AGO)
+            org_content_manager = our_AGO.content
         else:
-            # it's a dry-run
-            csv_writer.writerow({'First Name': acct.firstName,
-                                 'Last Name': acct.lastName,
-                                 'Username': acct.username})
-            display_account_info(acct, org_content_manager, args.verbose)
+            print("NO account found")
 
-    if not args.commit:
-        print("\n\n** This is a dry run, use --commit to delete users **\n")
+        for acct in accounts:
 
-    candidate_list_csv.close()
+            if args.commit:
+                print("\n* Deleting user {} and assets ... ".format(acct.username))
+                outcome = delete_account_and_assets(acct,
+                                                    org_content_manager,
+                                                    our_licenses,
+                                                    args.verbose)
+                if outcome:
+                    log_file.write("Deleted user {}'s accounts {} .\n".format(acct.firstName, acct.username))
+                else:
+                    log_file.write("FAILED to delete user {}'s accounts {} .\n".format(acct.firstName, acct.username))
+            else:
+                # it's a dry-run
+                csv_writer.writerow({'First Name': acct.firstName,
+                                     'Last Name': acct.lastName,
+                                     'Username': acct.username})
+                display_account_info(acct, org_content_manager, args.verbose)
+
+        if not args.commit:
+            print("\n\n** This is a dry run, use --commit to delete users **\n")
 
 except Exception as ex:
     print(ex)
     log_file.write(str(ex))
 
-log_file.close()
+finally:
+    if log_file:
+        log_file.close()
