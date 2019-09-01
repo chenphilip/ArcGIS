@@ -14,7 +14,7 @@ from our_org_constants import *
 
 __author__ = "Philip Chen"
 __license__ = "https://opensource.org/licenses/GPL-3.0 GPL-3.0 License"
-__date__ = "2019.08.31"
+__date__ = "2019.09.01"
 __version__ = "1.0.0"
 __status__ = "Tested on Python 3.7, ArcGIS API 1.5.2"
 
@@ -25,11 +25,9 @@ parser.add_argument("-p", "--password", help="Administrator password")
 parser.add_argument("-t", "--termcode", default="201900", help="Termcode 201910 etc")
 parser.add_argument("-c", "--cut_off_month", default="2019.05", help="Inactive before 2019.05")
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
-
 args = parser.parse_args()
 
 print("Hello admin ...\n")
-
 admin_id = args.user
 while not admin_id:
     admin_id = input("Please provide your AGO username: ")
@@ -70,7 +68,7 @@ try:
         print("NO account found")
         log_file.write("\nNO account found\n")
 
-    # Read the csv file in write mode
+    # Create the csv file with a header
     inactive_accts_file = "ago_inactive_accounts.csv"
     with open(inactive_accts_file, 'w', newline="") as inactive_accts_csv:
         field_names = ('First Name', 'Last Name', 'UserID', 'Created On', 'Last Login')
